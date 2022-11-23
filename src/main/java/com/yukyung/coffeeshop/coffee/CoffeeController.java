@@ -2,53 +2,54 @@ package com.yukyung.coffeeshop.coffee;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/coffees")
+@Validated
 public class CoffeeController {
-    private final Map<Long, Map<String, Object>> coffees = new HashMap<>();
 
-    @PostConstruct
-    public void init() {
-        Map<String, Object> coffee1 = new HashMap<>();
-        long coffeeId = 1L;
-        coffee1.put("coffeeId", coffeeId);
-        coffee1.put("korName", "바닐라 라떼");
-        coffee1.put("engName", "Vanilla Latte");
-        coffee1.put("price", 4500);
+    @PostMapping
+    public ResponseEntity postCoffee(@Valid @RequestBody CoffeePostDto coffeePostDto) {
 
-        coffees.put(coffeeId, coffee1);
+
+        return new ResponseEntity<>(coffeePostDto, HttpStatus.CREATED);
     }
 
-    // 1. 커피 정보 수정을 위한 핸들러 메서드 구현
     @PatchMapping("/{coffee-id}")
-    public ResponseEntity patchCoffee(@PathVariable("coffee-id") long coffeeId,
-                                      @RequestParam("korName") String korName,
-                                      @RequestParam("price") int price) {
-        Map<String, Object> coffee = coffees.get(coffeeId);
+    public ResponseEntity patchCoffee(@PathVariable("coffee-id") @Min(1) long coffeeId,
+                                          @Valid @RequestBody CoffeePatchDto coffeePatchDto) {
 
-        if (coffee == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        } else {
-            coffee.put("korName", korName);
-            coffee.put("price", price);
-        }
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(coffeePatchDto, HttpStatus.OK);
     }
 
-    // 2. 커피 정보 삭제를 위한 핸들러 서드 구현
+    @GetMapping("/{coffee-id}")
+    public ResponseEntity getCoffee(@PathVariable("coffee-id") long coffeeId) {
+        System.out.println("# coffeeId: " + coffeeId);
+
+        // not implementation
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity getCoffees() {
+        System.out.println("# get Coffees");
+
+        // not implementation
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @DeleteMapping("/{coffee-id}")
     public ResponseEntity deleteCoffee(@PathVariable("coffee-id") long coffeeId) {
-        if (coffees.containsKey(coffeeId)) {
-            coffees.remove(coffeeId);
-        } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
+        // No need business logic
+
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }
