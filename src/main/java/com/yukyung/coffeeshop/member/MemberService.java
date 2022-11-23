@@ -1,17 +1,36 @@
 package com.yukyung.coffeeshop.member;
 
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
 public class MemberService {
-    private final MemberRepository memberRepository = new MemberRepository();
 
-    public void createMember(Member member) {
-        memberRepository.postMember(member);
+    public Member createMember(Member member) {
+        Member createdMember = member;
+        return createdMember;
     }
 
-    public Member getMember(Long memberId) {
-        return memberRepository.getMember(memberId);
+    public Member updateMember(Member member) {
+        Member updatedMember = member;
+        return updatedMember;
     }
 
-    public void deleteMember(Long memberId) {
-        memberRepository.deleteMember(memberId);
+    public Member findMember(long memberId) {
+        Member member = new Member(memberId,"aaa@gmail.com","차은우","010-1234-5678");
+        return member;
+    }
+
+    public List<Member> findMembers() {
+        List<Member> members = List.of(
+                new Member(1L, "aaa@gmail.com", "차은우", "010-1234-5678"),
+                new Member(2L, "kdw@gmail.com", "강동원", "010-1111-2222")
+        );
+        return members;
+    }
+
+    public void deleteMember(long memberId) {
+
     }
 }

@@ -2,16 +2,15 @@ package com.yukyung.coffeeshop.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class Member {
-    private Long memberId;
+public class MemberResponseDto { //응답 데이터 역할 해주는 DTO 클래스
+    private long memberId;
+
     private String email;
+
     private String name;
+
     private String phone;
 }

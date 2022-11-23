@@ -7,14 +7,32 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v1/members")
+@RequestMapping("/v5/members")
 @Validated
 public class MemberController {
+    private final MemberService memberService;
+    private final MemberMapper mapper;
+
+    // MemberService, MemberMapper DI
+    public MemberController(MemberService memberService, MemberMapper mapper) {
+        this.memberService = memberService;
+        this.mapper = mapper;
+    }
+
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberPostDto) {
-        return new ResponseEntity<>(memberPostDto, HttpStatus.CREATED);
+        // Mapper를 이용해서 MemberPostDto를 Member로 변환
+        Member member = mapper.memberPostDtoToMember(memberPostDto);
+
+        Member response = memberService.createMember(member);
+
+        // Mapper를 이용해서 Member를 MemberResponseDto로 변환
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{member-id}")
@@ -22,26 +40,35 @@ public class MemberController {
                                       @Valid @RequestBody MemberPatchDto memberPatchDto) {
         memberPatchDto.setMemberId(memberId);
 
-        return new ResponseEntity<>(memberPatchDto, HttpStatus.OK);
+        Member response = memberService.updateMember(mapper.memberPatchDtoToMember(memberPatchDto));
+
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
     }
 
     @GetMapping("/{member-id}")
-    public ResponseEntity getMember(@PathVariable("member-id") @Min(1) long memberId) {
-        System.out.println("# memberId: " + memberId);
+    public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId) {
+        Member response = memberService.findMember(memberId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response),HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity getMembers() {
-        System.out.println("# get members");
+        List<Member> members = memberService.findMembers();
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        // Mapper를 이용해서 List<Member>를 MemberResponseDto로 변환
+        List<MemberResponseDto> response = members.stream()
+                .map(member -> mapper.memberToMemberResponseDto(member))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @DeleteMapping("/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") @Min(1) long memberId) {
         System.out.println("# memberId: " + memberId);
+
+        memberService.deleteMember(memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
