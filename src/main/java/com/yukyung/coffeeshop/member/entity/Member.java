@@ -1,4 +1,4 @@
-package com.yukyung.coffeeshop.member;
+package com.yukyung.coffeeshop.member.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

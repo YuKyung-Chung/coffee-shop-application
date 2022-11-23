@@ -1,21 +1,31 @@
-package com.yukyung.coffeeshop.coffee;
+package com.yukyung.coffeeshop.coffee.dto;
 
+import com.yukyung.coffeeshop.validator.NotSpace;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.Optional;
 
-public class CoffeePostDto {
-    @NotBlank
+public class CoffeePatchDto {
+    private long coffeeId;
+
+    @NotSpace(message = "커피명(한글)은 공백이 아니어야 합니다.")
     private String korName;
 
-    @NotBlank
-    @Pattern(regexp = "^([A-Za-z])(\\s?[A-Za-z])*$",
-    message = "커피명(영문)은 영문이어야 합니다(단어 사이 공백 한 칸 포함). 예: Caffe Latte")
+    @Pattern(regexp = "^([A-Za-z])(\\s?[A-Za-z])*$", message = "커피명(영문)은 영문이어야 합니다. 예) Caffe Latte")
     private String engName;
 
-    @Range(min = 100,max = 50000)
+
+    @Range(min = 100, max = 50000)
     private int price;
+
+    public long getCoffeeId() {
+        return coffeeId;
+    }
+
+    public void setCoffeeId(long coffeeId) {
+        this.coffeeId = coffeeId;
+    }
 
     public String getKorName() {
         return korName;

@@ -1,5 +1,11 @@
-package com.yukyung.coffeeshop.member;
+package com.yukyung.coffeeshop.member.controller;
 
+import com.yukyung.coffeeshop.member.dto.MemberPatchDto;
+import com.yukyung.coffeeshop.member.dto.MemberPostDto;
+import com.yukyung.coffeeshop.member.dto.MemberResponseDto;
+import com.yukyung.coffeeshop.member.entity.Member;
+import com.yukyung.coffeeshop.member.mapper.MemberMapper;
+import com.yukyung.coffeeshop.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

@@ -1,4 +1,6 @@
-package com.yukyung.coffeeshop.member;
+package com.yukyung.coffeeshop.member.repository;
+
+import com.yukyung.coffeeshop.member.entity.Member;
 
 import java.util.HashMap;
 import java.util.Map;

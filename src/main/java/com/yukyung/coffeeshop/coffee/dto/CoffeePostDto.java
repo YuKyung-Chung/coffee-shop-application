@@ -1,25 +1,21 @@
-package com.yukyung.coffeeshop.coffee;
+package com.yukyung.coffeeshop.coffee.dto;
 
-public class Coffee {
-    private long coffeeId;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
+public class CoffeePostDto {
+    @NotBlank
     private String korName;
+
+    @NotBlank
+    @Pattern(regexp = "^([A-Za-z])(\\s?[A-Za-z])*$",
+    message = "커피명(영문)은 영문이어야 합니다(단어 사이 공백 한 칸 포함). 예: Caffe Latte")
     private String engName;
+
+    @Range(min = 100,max = 50000)
     private int price;
-
-    public Coffee(long coffeeId, String korName, String engName, int price) {
-        this.coffeeId = coffeeId;
-        this.korName = korName;
-        this.engName = engName;
-        this.price = price;
-    }
-
-    public long getCoffeeId() {
-        return coffeeId;
-    }
-
-    public void setCoffeeId(long coffeeId) {
-        this.coffeeId = coffeeId;
-    }
 
     public String getKorName() {
         return korName;
