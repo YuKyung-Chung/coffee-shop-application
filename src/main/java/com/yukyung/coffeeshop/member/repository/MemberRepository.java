@@ -1,22 +1,12 @@
 package com.yukyung.coffeeshop.member.repository;
 
 import com.yukyung.coffeeshop.member.entity.Member;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
-public class MemberRepository {
-    private static Map<Long, Member> members = new HashMap<>();
-
-    public void postMember(Member member) {
-        members.put(member.getMemberId(), member);
-    }
-
-    public Member getMember(Long memberId) {
-        return members.get(memberId);
-    }
-
-    public void deleteMember(Long memberId) {
-        members.remove(memberId);
-    }
+public interface MemberRepository extends CrudRepository<Member,Long> {
+    //Spring Data JDBC에서 지원하는 쿼리 메서드 사용
+    //결과 데이터를 Member 엔티티 클래스의 객체로 지정 -> 리턴값을 Optional로 래핑
+    Optional<Member> findByEmail(String email);
 }

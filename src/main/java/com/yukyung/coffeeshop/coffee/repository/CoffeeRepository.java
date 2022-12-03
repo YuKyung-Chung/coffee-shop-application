@@ -1,30 +1,16 @@
 package com.yukyung.coffeeshop.coffee.repository;
 
 import com.yukyung.coffeeshop.coffee.entity.Coffee;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-public class CoffeeRepository {
-    private static Map<Long, Coffee> drinks = new HashMap<>();
+public interface CoffeeRepository extends CrudRepository<Coffee, Long> {
+    Optional<Coffee> findByCoffeeCode(String coffeeCode);
 
-    public void postCoffee(Coffee coffee) {
-        drinks.put(coffee.getCoffeeId(), coffee);
-    }
-
-    public Coffee patchCoffee(Long coffeeId, String korName, int price) {
-        Coffee drink = drinks.get(coffeeId);
-        drink.setKorName(korName);
-        drink.setPrice(price);
-
-        return drinks.put(coffeeId, drink);
-    }
-
-    public Coffee getCoffee(Long coffeeId) {
-        return drinks.get(coffeeId);
-    }
-
-    public void deleteCoffee(Long coffeeId) {
-        drinks.remove(coffeeId);
-    }
+    @Query("SELECT * FROM COFFEE WHERE COFFEE_ID = :coffeeId")
+    Optional<Coffee> findByCoffee(Long coffeeId);
 }

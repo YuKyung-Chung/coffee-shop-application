@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v5/members")
+@RequestMapping("/v10/members")
 @Validated
 public class MemberController {
     private final MemberService memberService;
