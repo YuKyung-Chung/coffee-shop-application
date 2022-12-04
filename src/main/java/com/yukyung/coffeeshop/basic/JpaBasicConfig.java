@@ -17,14 +17,23 @@ public class JpaBasicConfig {
     @Bean
     public CommandLineRunner testJpaBasicRunner(EntityManagerFactory emFactory) {
         this.em = emFactory.createEntityManager();
-
-        // em을 통해 트랜잭션 객체 생성
-        // 트랜잭션 객체 기준으로 테이블에 데이터 저장
         this.tx = em.getTransaction();
 
         return args -> {
-            example02();
+            example03();
         };
+    }
+
+    private void example03() {
+        tx.begin();
+
+        Member member1 = new Member("happy1@gmail.com");
+        Member member2 = new Member("happy2@gmail.com");
+
+        em.persist(member1);
+        em.persist(member2);
+
+        tx.commit();
     }
 
     private void example02() {
