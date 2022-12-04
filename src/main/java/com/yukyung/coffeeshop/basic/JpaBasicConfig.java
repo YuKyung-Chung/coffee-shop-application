@@ -18,9 +18,31 @@ public class JpaBasicConfig {
     public CommandLineRunner testJpaBasicRunner(EntityManagerFactory emFactory) {
         this.em = emFactory.createEntityManager();
 
+        // em을 통해 트랜잭션 객체 생성
+        // 트랜잭션 객체 기준으로 테이블에 데이터 저장
+        this.tx = em.getTransaction();
+
         return args -> {
-            example01();
+            example02();
         };
+    }
+
+    private void example02() {
+        //트랜잭션 시작
+        tx.begin();
+        Member member = new Member("happy@gmail.com");
+
+        // member 객체 영속성 컨텍스트에 저장
+        em.persist(member);
+
+        //영속성 컨텍스트에 저장되어 있던 member 객체 테이블에 저장
+        tx.commit();
+
+        Member resultMember1 = em.find(Member.class, 1L);
+        System.out.println("Id: " + resultMember1.getMemberId() + "email: " + resultMember1.getEmail());
+
+        Member resultMember2 = em.find(Member.class, 2L);
+        System.out.println(resultMember2 == null);
     }
 
     private void example01() {
