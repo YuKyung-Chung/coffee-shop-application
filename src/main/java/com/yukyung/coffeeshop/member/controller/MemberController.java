@@ -1,11 +1,14 @@
 package com.yukyung.coffeeshop.member.controller;
 
+import com.yukyung.coffeeshop.member.dto.MemberAllDto;
 import com.yukyung.coffeeshop.member.dto.MemberPatchDto;
 import com.yukyung.coffeeshop.member.dto.MemberPostDto;
 import com.yukyung.coffeeshop.member.dto.MemberResponseDto;
 import com.yukyung.coffeeshop.member.entity.Member;
+import com.yukyung.coffeeshop.member.entity.PageInfo;
 import com.yukyung.coffeeshop.member.mapper.MemberMapper;
 import com.yukyung.coffeeshop.member.service.MemberService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -59,15 +62,21 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity getMembers() {
-        List<Member> members = memberService.findMembers();
+    public ResponseEntity getMembers(@Positive @RequestParam int page,
+                                     @Positive @RequestParam int size) {
+        //page information
+        Page<Member> memberPage = memberService.findMembers(page - 1, size);
+        PageInfo pageInfo = new PageInfo(page, size, (int) memberPage.getTotalElements(), memberPage.getTotalPages());
 
+        //members 변환
+        List<Member> members = memberPage.getContent();
         // Mapper를 이용해서 List<Member>를 MemberResponseDto로 변환
         List<MemberResponseDto> response = members.stream()
                 .map(member -> mapper.memberToMemberResponseDto(member))
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(
+                new MemberAllDto(response,pageInfo), HttpStatus.OK);
     }
 
     @DeleteMapping("/{member-id}")

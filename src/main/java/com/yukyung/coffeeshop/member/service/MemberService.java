@@ -4,6 +4,8 @@ import com.yukyung.coffeeshop.exception.BusinessLogicException;
 import com.yukyung.coffeeshop.exception.ExceptionCode;
 import com.yukyung.coffeeshop.member.entity.Member;
 import com.yukyung.coffeeshop.member.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +42,9 @@ public class MemberService {
         return findVerifiedMember(memberId);
     }
 
-    public List<Member> findMembers() {
-        return (List<Member>) memberRepository.findAll();
+    public Page<Member> findMembers(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return memberRepository.findAllByOrderByMemberIdDesc(pageRequest);
     }
 
     public void deleteMember(long memberId) {
