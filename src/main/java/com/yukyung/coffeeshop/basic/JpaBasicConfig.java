@@ -20,8 +20,19 @@ public class JpaBasicConfig {
         this.tx = em.getTransaction();
 
         return args -> {
-            example03();
+            example04();
         };
+    }
+
+    private void example04() {
+        tx.begin();
+        em.persist(new Member("happy1@gmail.com"));
+        tx.commit();
+
+        tx.begin();
+        Member member1 = em.find(Member.class, 1L); //member 객체를 영속성 컨텍스트의 1차 캐시에서 조회
+        member1.setEmail("happy2@gmail.com");
+        tx.commit();
     }
 
     private void example03() {
